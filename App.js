@@ -1,20 +1,23 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 
-export default function App() {
+import React from 'react';
+import { View, Button } from 'react-native';
+import { solicitarPermisos, obtenerContactos } from './screens/Contacts'; // Importa las funciones
+
+function App() {
+  async function manejarObtencionContactos() {
+    await solicitarPermisos(); 
+    await obtenerContactos(); 
+  }
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
+    <View>
+      {}
+      <Button title="Obtener contactos" onPress={manejarObtencionContactos} />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
+
+
+
