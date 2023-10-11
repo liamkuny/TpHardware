@@ -1,23 +1,35 @@
-
 import React from 'react';
-import { View, Button } from 'react-native';
-import { solicitarPermisos, obtenerContactos } from './screens/Contacts'; // Importa las funciones
+import { View, Button, StyleSheet } from 'react-native';
+import { solicitarPermisos, obtenerContactos } from './screens/Contacts';
+import { Weather } from './screens/Weather'; 
 
 function App() {
   async function manejarObtencionContactos() {
-    await solicitarPermisos(); 
-    await obtenerContactos(); 
+    await solicitarPermisos();
+    await obtenerContactos();
+    
   }
+  async function ObtencionClima(){
+    await Weather();
+  }
+  
 
   return (
-    <View>
-      {}
+    <View style={styles.container}>
       <Button title="Obtener contactos" onPress={manejarObtencionContactos} />
+      <Button title="Clima" onPress={ObtencionClima} />
     </View>
   );
 }
 
-export default App;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
 
+export default App;
 
 
