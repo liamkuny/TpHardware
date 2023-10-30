@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Button, StyleSheet } from 'react-native';
 import ContactScreen from './screens/Contacts';
 import Weather from './screens/Weather'; // Importa el componente WeatherScreen
+import Scanner from './screens/Scanner'; // Importa el componente Scanner
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -32,6 +33,13 @@ function App() {
             headerTitle: 'Weather Screen',
           }}
         />
+        <Stack.Screen
+          name="ScannerScreen"
+          component={Scanner}
+          options={{
+            headerTitle: 'QR Scanner',
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -47,6 +55,10 @@ function HomeScreen({ navigation }) {
       <Button
         title="Ir a Weather Screen"
         onPress={() => navigation.navigate('WeatherScreen')}
+      />
+      <Button
+        title="Escaneo QR"
+        onPress={() => navigation.navigate('ScannerScreen')}
       />
     </View>
   );
