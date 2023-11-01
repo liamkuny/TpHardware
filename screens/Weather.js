@@ -4,7 +4,7 @@ import { LinearGradient } from "expo";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import * as Location from "expo-location";
 
-const API_KEY = "d347d4d0c7fc44ef0274fb6035027f5e";
+const API_KEY = "3684edc884ce3f6b2c719c8a9feac7e1";
 
 const weatherCases = {
   Clear: {
@@ -86,12 +86,13 @@ function Weather() {
     })();
   }, []);
 
-  function getWeather(lat, lon) {
+  async function getWeather(lat, lon) {
     try {
-      const response = fetch(
+      const response = await fetch (
         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&APPID=${API_KEY}&units=metric`
       );
-      if (response.ok) {
+      
+      if (response.status==200) {
         console.log("llego bien");
         const json = response.json();
         setTemperature(json.main.temp);
