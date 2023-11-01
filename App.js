@@ -1,10 +1,11 @@
 import React from 'react';
 import { View, Button, StyleSheet } from 'react-native';
 import ContactScreen from './screens/Contacts';
-import Weather from './screens/Weather'; // Importa el componente WeatherScreen
-import Scanner from './screens/Scanner'; // Importa el componente Scanner
+import Weather from './screens/Weather'; 
+import Scanner from './screens/Scanner'; 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import NuestroProyecto from './screens/NuestroQr';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,7 +29,7 @@ function App() {
         />
         <Stack.Screen
           name="WeatherScreen"
-          component={Weather} // Agrega WeatherScreen como un componente de pantalla
+          component={Weather} 
           options={{
             headerTitle: 'Weather Screen',
           }}
@@ -38,6 +39,13 @@ function App() {
           component={Scanner}
           options={{
             headerTitle: 'QR Scanner',
+          }}
+        />
+        <Stack.Screen
+          name="NuestroProyecto"
+          component={NuestroProyecto} 
+          options={{
+            headerTitle: 'Nuestro Proyecto',
           }}
         />
       </Stack.Navigator>
@@ -60,6 +68,10 @@ function HomeScreen({ navigation }) {
         title="Escaneo QR"
         onPress={() => navigation.navigate('ScannerScreen')}
       />
+      <Button
+        title="Escaneo NuestroQr"
+        onPress={() => navigation.navigate('NuestroProyecto')}
+      />
     </View>
   );
 }
@@ -69,6 +81,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    
   },
 });
 
