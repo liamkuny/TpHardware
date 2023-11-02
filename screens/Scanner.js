@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, StyleSheet, Linking} from 'react-native'; 
+import { View, Text, StyleSheet,Linking } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 export default function Scanner() {
@@ -15,25 +15,31 @@ export default function Scanner() {
 
   const handleBarCodeScanned = ({data }) => {
     setScanned(true);
-    Linking.openURL(data); // Abre el enlace en el navegador si es una URL
-  }
+    Linking.openURL(data);
+  };
 
   if (hasPermission === null) {
-    return <Text>Requesting for Camera Permission</Text>;
+    return <Text>Solicitando permiso de acceso a la cámara...</Text>;
   }
   if (hasPermission === false) {
-    return <Text>No access to Camera</Text>;
+    return <Text>Acceso a la cámara denegado.</Text>;
   }
 
   return (
-    <View>
+    <View style={styles.container}>
       <BarCodeScanner
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
         style={StyleSheet.absoluteFillObject}
       />
-      {scanned && <Button title='Tap to scan again' onPress={() => setScanned(false)} />}
     </View>
   );
-};
+}
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+  },
+});
 
