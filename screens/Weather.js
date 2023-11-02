@@ -1,157 +1,112 @@
-import React, { useEffect, useState } from "react";
-import { Text, View, ActivityIndicator, StyleSheet } from "react-native";
-import { LinearGradient } from "expo";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-import * as Location from "expo-location";
+import React, { useEffect, useState } from 'react';
+import { Text, View, ActivityIndicator, StyleSheet } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import Axios from 'axios';
+import * as Location from 'expo-location';
 
-const API_KEY = "3684edc884ce3f6b2c719c8a9feac7e1";
+const API_KEY = '3684edc884ce3f6b2c719c8a9feac7e1';
 
-const weatherCases = {
-  Clear: {
-    title: "Clear Sky",
-    subtitle: "It's a clear day!",
-    colors: ["#00C6FB", "#005BEA"],
-    icon: "weather-sunny",
-  },
-  Rain: {
-    title: "Rain",
-    subtitle: "Don't forget your umbrella!",
-    colors: ["#00C6FB", "#005BEA"],
-    icon: "weather-pouring",
-  },
-  Thunderstorm: {
-    title: "Thunderstorm",
-    subtitle: "Stay indoors and be safe!",
-    colors: ["#00C6FB", "#005BEA"],
-    icon: "weather-lightning",
-  },
-  Clouds: {
-    title: "Cloudy",
-    subtitle: "A bit cloudy today",
-    colors: ["#D7D2CC", "#304352"],
-    icon: "weather-cloudy",
-  },
-  Snow: {
-    title: "Snow",
-    subtitle: "Let's build a snowman!",
-    colors: ["#7DE2FC", "#B9B6E5"],
-    icon: "weather-snowy",
-  },
-  Mist: {
-    title: "Mist",
-    subtitle: "Low visibility, drive safely",
-    colors: ["#5D4157", "#A8CABA"],
-    icon: "weather-fog",
-  },
-  Haze: {
-    title: "Haze",
-    subtitle: "Hazy conditions",
-    colors: ["#5D4157", "#A8CABA"],
-    icon: "weather-fog",
-  },
-};
-
-function Weather() {
+const Weather = () => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [weatherData, setWeatherData] = useState({
+    temperature: null,
+    title: null,
+    country: null,
+    date: '',
+    time: '',
+    location: '',
+  });
   const [error, setError] = useState(null);
-  const [temperature, setTemperature] = useState(null);
-  const [title, settitle] = useState(null);
-  const [country, setCountry] = useState(null);
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [location, setLocation] = useState("");
 
   useEffect(() => {
     const currentDate = new Date();
     const formattedDate = currentDate.toLocaleDateString();
     const formattedTime = currentDate.toLocaleTimeString();
 
-    setDate(formattedDate);
-    setTime(formattedTime);
+    setWeatherData((prevData) => ({
+      ...prevData,
+      date: formattedDate,
+      time: formattedTime,
+    }));
 
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      console.log("llego locacion");
-      if (status !== "granted") {
-        setError("Permission to access location was denied");
-        return;
+
+      if (status === 'granted') {
+        let location = await Location.getCurrentPositionAsync({});
+        setWeatherData((prevData) => ({
+          ...prevData,
+          location: `Lat: ${location.coords.latitude}, Lon: ${location.coords.longitude}`,
+        }));
+        getWeather(location.coords.latitude, location.coords.longitude);
+      } else {
+        setError('Permission to access location was denied');
       }
-
-      let location = await Location.getCurrentPositionAsync({});
-      setLocation(
-        `Lat: ${location.coords.latitude}, Lon: ${location.coords.longitude}`
-      );
-
-      getWeather(location.coords.latitude, location.coords.longitude);
     })();
   }, []);
 
-  async function getWeather(lat, lon) {
+  const getWeather = async (lat, lon) => {
     try {
-      const response = await fetch (
-        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&APPID=${API_KEY}&units=metric`
+      const response = await Axios.get(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric`
       );
-      
-      if (response.status==200) {
-        console.log("llego bien");
-        const json = response.json();
-        setTemperature(json.main.temp);
-        settitle(json.weather[0].main);
-        setCountry(json.sys.country);
+
+      if (response.status === 200) {
+        const data = response.data;
+        setWeatherData((prevData) => ({
+          ...prevData,
+          temperature: Math.ceil(data.main.temp),
+          title: data.weather[0].main,
+          country: data.sys.country,
+        }));
         setIsLoaded(true);
       } else {
-        setError("Failed to fetch weather data");
+        setError('Failed to fetch weather data');
       }
     } catch (error) {
-      setError("An error occurred while fetching weather data");
+      setError('An error occurred while fetching weather data');
     }
-  }
+  };
 
   const styles = StyleSheet.create({
-    // ... (tus estilos)
+    container: {
+      flex: 1,
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    text: {
+      fontSize: 18,
+      color: '#FFFFFF',
+    },
+    errorText: {
+      fontSize: 18,
+      color: 'red',
+    },
   });
 
   return (
     <View style={styles.container}>
       {isLoaded ? (
         <LinearGradient
-          colors={weatherCases[title]?.colors || ["#FFFFFF", "#FFFFFF"]}
+          colors={['#00C6FB', '#005BEA']}
           style={styles.container}
         >
-          <View style={styles.upper}>
-            <MaterialCommunityIcons
-              color="white"
-              size={144}
-              title={weatherCases[title]?.icon || "weather-sunny"}
-            />
-            <Text style={styles.temp}>{Math.ceil(temperature - 273.15)}º</Text>
-            <Text style={styles.country}>{country}</Text>
-          </View>
-          <View style={styles.middle}>
-            <Text style={styles.date}>{date}</Text>
-            <Text style={styles.time}>{time}</Text>
-          </View>
-          <View style={styles.lower}>
-            <Text style={styles.title}>
-              {weatherCases[title]?.title || "Unknown Weather"}
-            </Text>
-            <Text style={styles.subtitle}>
-              {weatherCases[title]?.subtitle || "No data available"}
-            </Text>
-          </View>
-          <View style={styles.location}>
-            <Text style={styles.locationText}>Location: {location}</Text>
-          </View>
+          <Text style={styles.text}>{weatherData.temperature}ºC</Text>
+          <Text style={styles.text}>{weatherData.country}</Text>
+          <Text style={styles.text}>{weatherData.date}</Text>
+          <Text style={styles.text}>{weatherData.time}</Text>
         </LinearGradient>
       ) : (
-        <View style={styles.loading}>
-          <ActivityIndicator size="large" color="#0000FF" />
-          <Text style={styles.loadingText}>Getting the weather data</Text>
+        <View style={styles.container}>
           {error ? <Text style={styles.errorText}>{error}</Text> : null}
+          <ActivityIndicator size="large" color="#0000FF" />
+          <Text style={styles.text}>Getting the weather data</Text>
         </View>
       )}
     </View>
   );
-}
+};
 
 export default Weather;
+
+
