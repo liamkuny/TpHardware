@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import * as Contacts from 'expo-contacts';
-import { Ionicons } from '@expo/vector-icons';
 
 const ContactScreen = () => {
   const [contacts, setContacts] = useState([]);
@@ -26,10 +25,6 @@ const ContactScreen = () => {
       data={contacts}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => {
-        const isEmergencyContact =
-          item.phoneNumbers &&
-          item.phoneNumbers.some((phoneNumber) => phoneNumber.label === 'emergency');
-
         return (
           <View style={styles.contactItem}>
             <View>
@@ -37,12 +32,9 @@ const ContactScreen = () => {
                 {item.firstName} {item.lastName}
               </Text>
               <Text style={styles.contactNumber}>
-                {item.phoneNumbers && item.phoneNumbers[0] && item.phoneNumbers[0].number}
+                {item.phoneNumbers}
               </Text>
             </View>
-            {isEmergencyContact && (
-              <Ionicons name="ios-alert" size={24} color="red" style={styles.emergencyIcon} />
-            )}
           </View>
         );
       }}
@@ -69,9 +61,7 @@ const styles = StyleSheet.create({
   contactNumber: {
     fontSize: 17,
   },
-  emergencyIcon: {
-    alignSelf: 'center',
-  },
 });
 
 export default ContactScreen;
+

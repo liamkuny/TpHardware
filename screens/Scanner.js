@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet,Linking } from 'react-native';
+import { View, Text, StyleSheet} from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 export default function Scanner() {
@@ -15,12 +15,13 @@ export default function Scanner() {
 
   const handleBarCodeScanned = ({data }) => {
     setScanned(true);
-    Linking.openURL(data);
+    alert(`Se ha escaneado el link: ${data}`);
   };
 
   if (hasPermission === null) {
     return <Text>Solicitando permiso de acceso a la cámara...</Text>;
   }
+  
   if (hasPermission === false) {
     return <Text>Acceso a la cámara denegado.</Text>;
   }

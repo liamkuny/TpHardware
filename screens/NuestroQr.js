@@ -6,7 +6,7 @@ const NuestroProyecto = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Nuestro proyecto Soifer y Kuniewsky</Text>
       <Image
-        source={require('../assets/NuestroQR.jpeg')} 
+        source={require('../assets/Captura.png')} 
         style={styles.image}
       />
     </View>
