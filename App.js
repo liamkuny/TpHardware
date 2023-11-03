@@ -6,6 +6,7 @@ import Scanner from './screens/Scanner';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import NuestroProyecto from './screens/NuestroQr';
+import VideoScreen from './screens/Video';
 
 const Stack = createNativeStackNavigator();
 
@@ -48,6 +49,13 @@ function App() {
             headerTitle: 'Nuestro Proyecto',
           }}
         />
+        <Stack.Screen
+          name="VideoScreen"
+          component={VideoScreen} 
+          options={{
+            headerTitle: 'Pantalla video',
+          }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -71,6 +79,10 @@ function HomeScreen({ navigation }) {
       <Button
         title="Escaneo NuestroQr"
         onPress={() => navigation.navigate('NuestroProyecto')}
+      />
+      <Button
+        title="Ir a Screen Video"
+        onPress={() => navigation.navigate('VideoScreen')}
       />
     </View>
   );
