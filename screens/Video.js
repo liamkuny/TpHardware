@@ -18,7 +18,7 @@ const VideoScreen = () => {
   }, []);
 
   const saveVideoUrl = () => {
-    setVideoUrl(videoUrl); // Esto no es necesario, pero lo mantengo para claridad
+    setVideoUrl(videoUrl); 
     AsyncStorage.setItem('lastVideoUrl', videoUrl);
   };
 
