@@ -17,9 +17,10 @@ const VideoScreen = () => {
     });
   }, []);
 
-  const saveVideoUrl = () => {
-    setVideoUrl(videoUrl); 
-    AsyncStorage.setItem('lastVideoUrl', videoUrl);
+  const saveVideoUrl = () => { 
+    AsyncStorage.setItem('lastVideoUrl', videoUrl).then(() => {
+      setVideoUrl(videoUrl);
+    });
   };
 
   const PlayAndPause = () => {
