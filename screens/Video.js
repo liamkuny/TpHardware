@@ -1,25 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import { View, TextInput, Button} from 'react-native';
+import { View, TextInput, Button } from 'react-native';
 import { Video } from 'expo-av';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const VideoScreen = () => {
   const [videoUrl, setVideoUrl] = useState(null);
-  const [textInputValue, setTextInputValue] = useState('');
   const video = React.useRef(null);
   const [status, setStatus] = React.useState({});
 
   useEffect(() => {
-    AsyncStorage.getItem('lastTextInputValue').then((value) => {
+    AsyncStorage.getItem('lastVideoUrl').then((value) => {
       if (value) {
-        setTextInputValue(value);
+        setVideoUrl(value);
+        video.current.loadAsync({ uri: value }, {}, false);
       }
     });
   }, []);
 
-  const saveTextInputValue = () => {
-    setVideoUrl(textInputValue);
-    AsyncStorage.setItem('lastTextInputValue', textInputValue);
+  const saveVideoUrl = () => {
+    setVideoUrl(videoUrl); // Esto no es necesario, pero lo mantengo para claridad
+    AsyncStorage.setItem('lastVideoUrl', videoUrl);
   };
 
   const PlayAndPause = () => {
@@ -34,10 +34,10 @@ const VideoScreen = () => {
     <View>
       <TextInput
         placeholder="Ingresa el URL del video"
-        value={textInputValue}
-        onChangeText={(text) => setTextInputValue(text)}
+        value={videoUrl}
+        onChangeText={(text) => setVideoUrl(text)}
       />
-      <Button title="Guardar" onPress={saveTextInputValue} />
+      <Button title="Guardar" onPress={saveVideoUrl} />
       <Button title={status.isPlaying ? "Pause" : "Play"} onPress={PlayAndPause} />
 
       {videoUrl && (
@@ -57,7 +57,8 @@ const VideoScreen = () => {
   );
 };
 
-
 export default VideoScreen;
+
+
 
 
