@@ -31,9 +31,13 @@ const ContactScreen = () => {
               <Text style={styles.contactName}>
                 {item.firstName} {item.lastName}
               </Text>
-              <Text style={styles.contactNumber}>
-                {item.phoneNumbers}
-              </Text>
+              {item.phoneNumbers ? (
+                item.phoneNumbers.map((phoneNumber, keyy) => (
+                  <Text key={keyy} style={styles.contactNumber}>
+                    {phoneNumber.number}
+                  </Text>
+                ))
+              ) : null}
             </View>
           </View>
         );
@@ -64,4 +68,3 @@ const styles = StyleSheet.create({
 });
 
 export default ContactScreen;
-
